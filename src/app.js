@@ -50,6 +50,10 @@ app.post("/livros", (req, res) => {
 
 app.delete("/livros/:id", (req, res) => {
   const index = buscaLivro(req.params.id);
+
+  livros.splice(index, 1);
+
+  res.status(200).send("Remoção reaalizada!");
 });
 
 export default app;
