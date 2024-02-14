@@ -1,5 +1,6 @@
 import express from "express";
 import conectDatabase from "./config/dbconnect.js";
+import book from "./models/Book.js";
 
 const conection = await conectDatabase();
 
@@ -14,26 +15,16 @@ conection.once("open", () => {
 const app = express();
 app.use(express.json());
 
-const livros = [
-  { id: 1, name: "O senhor dos aneis" },
-  { id: 2, name: "O senhor dos aneis 2" },
-];
-
-//função para realizar a busca do registro por parametro
-function buscaLivro(id) {
-  return livros.findIndex((livro) => {
-    return livro.id === Number(id);
-  });
-}
-
 // ROTA RAIZ DA APLICAÇÃO
 app.get("/", (req, res) => {
-  res.send(200).send("Curso de node.JS");
+  res.status(200).send("Curso de node.JS");
 });
 
 //ROTA QUE BUSCA TODOS OS LIVROS
-app.get("/livros", (req, res) => {
-  res.status(200).json(livros);
+app.get("/livros", async (req, res) => {
+  const listBooks = await book.find({});
+  //res.status(200).send("rota encontrada");
+  res.status(200).json(listBooks);
 });
 
 //ROTA QUE FAZ BUSCA DE LIVROS POR ID

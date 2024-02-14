@@ -1,9 +1,7 @@
 import mongoose from "mongoose";
 
 async function conectDatabase() {
-  mongoose.connect(
-    "mongodb+srv://phelipeprieto:sgm375dba@aluraapi.q3pypht.mongodb.net/aluraApi?retryWrites=true&w=majority"
-  );
+  mongoose.connect(process.env.DB_CONECTION_STRING);
 
   return mongoose.connection;
 }
