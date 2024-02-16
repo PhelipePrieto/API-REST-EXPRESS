@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { author } from "../models/Author.js";
 
 class authorController {
@@ -15,11 +16,24 @@ class authorController {
     try {
       const id = req.params.id;
       const authorFound = await author.findById(id);
-      res.status(200).json(authorFound);
+
+      console.log(authorFound);
+
+      if (authorFound !== null) {
+        res.status(200).json(authorFound);
+      } else {
+        res.status(404).json({
+          message: " ID não encontrado -  Falha inesperada na requisição",
+        });
+      }
     } catch (error) {
-      res
-        .status(500)
-        .json({ message: `${error.message} - Falha inesperada na requisição` });
+      if (error instanceof mongoose.Error.CastError) {
+        res
+          .status(400)
+          .send({ message: "Um ou mais dados fornecidos estão incorretos" });
+      } else {
+        res.status(500).send({ message: "erro interno do servidor" });
+      }
     }
   }
 
