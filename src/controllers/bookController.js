@@ -2,30 +2,26 @@ import { author } from "../models/Author.js";
 import book from "../models/Book.js";
 
 class bookController {
-  static async listBooks(req, res) {
+  static async listBooks(req, res, next) {
     const listBooks = await book.find({});
 
     try {
       res.status(200).json(listBooks);
     } catch (error) {
-      res
-        .status(500)
-        .json({ message: `${error.message} - Falha inesperada na requisição` });
+      next(error);
     }
   }
-  static async listBookForId(req, res) {
+  static async listBookForId(req, res, next) {
     const id = req.params.id;
     try {
       const bookFound = await book.findById(id);
       res.status(200).json(bookFound);
     } catch (error) {
-      res
-        .status(500)
-        .json({ message: `${error.message} - Falha inesperada na requisição` });
+      next(error);
     }
   }
 
-  static async createBook(req, res) {
+  static async createBook(req, res, next) {
     const newBook = req.body;
     try {
       const authorFound = await author.findById(newBook.author);
@@ -33,46 +29,38 @@ class bookController {
       const bookCreate = await book.create(bookComplete);
       res.status(201).json({ messege: "Criado com sucesso", book: bookCreate });
     } catch (error) {
-      res
-        .status(500)
-        .json({ message: `${error.message} -  falha ao cadastrarlivro` });
+      next(error);
     }
   }
 
-  static async updateBook(req, res) {
+  static async updateBook(req, res, next) {
     const id = req.params.id;
     try {
       await book.findByIdAndUpdate(id, req.body);
       res.status(200).json({ messege: "Atualizado com sucesso" });
     } catch (error) {
-      res.status(500).json({
-        message: `${error.message} - Falha inesperada na atualização`,
-      });
+      next(error);
     }
   }
 
-  static async deleteBook(req, res) {
+  static async deleteBook(req, res, next) {
     const id = req.params.id;
     try {
       await book.findByIdAndDelete(id);
       res.status(200).json({ messege: "Excluido com sucesso" });
     } catch (error) {
-      res.status(500).json({
-        message: `${error.message} - Falha inesperada na exclusão do registro`,
-      });
+      next(error);
     }
   }
 
-  static async listBooksByPublishing(req, res) {
+  static async listBooksByPublishing(req, res, next) {
     const publishing = req.query.publishing;
 
     try {
       const booksByPublishing = await book.find({ publishing: publishing });
       res.status(200).json(booksByPublishing);
     } catch (error) {
-      res.status(500).json({
-        message: `${error.message} - Falha inesperada na busca do registro`,
-      });
+      next(error);
     }
   }
 }

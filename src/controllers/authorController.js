@@ -1,18 +1,15 @@
-import mongoose from "mongoose";
 import { author } from "../models/Author.js";
 
 class authorController {
-  static async listAuthors(req, res) {
+  static async listAuthors(req, res, next) {
     try {
       const listAuthors = await author.find({});
       res.status(200).json(listAuthors);
     } catch (error) {
-      res
-        .status(500)
-        .json({ message: `${error.message} - Falha inesperada na requisição` });
+      next(error);
     }
   }
-  static async listAuthorForId(req, res) {
+  static async listAuthorForId(req, res, next) {
     try {
       const id = req.params.id;
       const authorFound = await author.findById(id);
@@ -27,17 +24,11 @@ class authorController {
         });
       }
     } catch (error) {
-      if (error instanceof mongoose.Error.CastError) {
-        res
-          .status(400)
-          .send({ message: "Um ou mais dados fornecidos estão incorretos" });
-      } else {
-        res.status(500).send({ message: "erro interno do servidor" });
-      }
+      next(error);
     }
   }
 
-  static async createAuthor(req, res) {
+  static async createAuthor(req, res, next) {
     try {
       const newAuthor = await author.create(req.body);
 
@@ -45,33 +36,27 @@ class authorController {
         .status(201)
         .json({ messege: "Criado com sucesso", author: newAuthor });
     } catch (error) {
-      res
-        .status(500)
-        .json({ message: `${error.message} -  falha ao cadastrar Autor` });
+      next(error);
     }
   }
 
-  static async updateAuthor(req, res) {
+  static async updateAuthor(req, res, next) {
     try {
       const id = req.params.id;
       await author.findByIdAndUpdate(id, req.body);
       res.status(200).json({ messege: "Atualizado com sucesso" });
     } catch (error) {
-      res.status(500).json({
-        message: `${error.message} - Falha inesperada na atualização`,
-      });
+      next(error);
     }
   }
 
-  static async deleteAuthor(req, res) {
+  static async deleteAuthor(req, res, next) {
     try {
       const id = req.params.id;
       await author.findByIdAndDelete(id);
       res.status(200).json({ messege: "Excluido com sucesso" });
     } catch (error) {
-      res.status(500).json({
-        message: `${error.message} - Falha inesperada na exclusão do registro`,
-      });
+      next(error);
     }
   }
 }
