@@ -13,7 +13,16 @@ const bookSchema = new mongoose.Schema(
       require: [true, "É preciso informar a editora do Livro"],
     },
     price: { type: Number },
-    page_number: { type: Number },
+    page_number: {
+      type: Number,
+      validate: {
+        validator: (valor) => {
+          return valor >= 50 && valor <= 5000;
+        },
+        message:
+          "O número de págianas deve estar entre 10 e 5000. Valor fornecido {VALOR}",
+      },
+    },
     author: authorSchema,
   },
   { versionKey: false }
