@@ -1,6 +1,6 @@
-import Error from "./error.js";
+import ErrorBase from "./error.js";
 
-class IncorrectRequest extends Error {
+class IncorrectRequest extends ErrorBase {
   constructor(message = "Um ou mais dados fornecidos estão incorretos") {
     super(message, 400);
   }
