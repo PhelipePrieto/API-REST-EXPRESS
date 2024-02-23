@@ -1,6 +1,5 @@
 import error404 from "../errors/error404.js";
-import { author } from "../models/Author.js";
-import book from "../models/Book.js";
+import { author, book } from "../models/index.js";
 
 class bookController {
   static async listBooks(req, res, next) {
